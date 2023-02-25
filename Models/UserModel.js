@@ -5,6 +5,7 @@ const USER_SCHEMA = new Schema({
 	firstname: String,
 	lastname: String,
 	email: {
+		required: true,
 		type: String,
 		trim: true,
 		validate: {
@@ -15,10 +16,14 @@ const USER_SCHEMA = new Schema({
 		}
 	},
 	photoURL: String,
-	password: String,
+	password: {
+		type: String,
+		required: true
+	},
 	username: {
 		type: String,
-		unique: true
+		unique: true,
+		required: false
 	}
 });
 
