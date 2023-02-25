@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require('../Models/UserModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const AuthMiddleWare = require("../Middleware/Auth");
 
 
 // SignUp with username password => returns accesstoken and user object
@@ -56,19 +57,20 @@ router.patch('/reset-password', async (req, res) => {
 })
 
 // Update user details  => returns updated user
-router.patch('/update', async (req, res) => {
-	const user = await User.findOne({ username: req.body.username })
-	if (!user) {
-		return res.status(404).send({ message: "Cannot find user!" });
-	} else {
-		try {
+router.patch('/update', AuthMiddleWare, async (req, res) => {
+	try {
+		const user = await User.findOne({ _id: req.authUser.id })
+		if (!user) {
+			return res.status(404).send({ message: "Cannot find user!" });
+		} else {
+			req.body
 			const userUpdate = await User.findByIdAndUpdate(user._id, req.body, {
 				returnOriginal: false
 			})
 			res.send(userUpdate)
-		} catch (error) {
-			res.send(error)
 		}
+	} catch (error) {
+		res.send(error)
 	}
 })
 
