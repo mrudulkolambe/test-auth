@@ -14,7 +14,9 @@ app.use(bodyParser.json())
 const userRouter = require('./Routes/User');
 app.use("/user", userRouter)
 
-app.use(cors())
+app.use(cors({
+	origin: "*"
+}))
 
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true })

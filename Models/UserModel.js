@@ -22,7 +22,6 @@ const USER_SCHEMA = new Schema({
 	},
 	username: {
 		type: String,
-		unique: true,
 		required: false
 	}
 });
