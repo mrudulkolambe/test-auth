@@ -15,8 +15,8 @@ const userRouter = require('./Routes/User');
 app.use("/user", userRouter)
 
 app.use(cors({
-	origin: "*"
-}))
+    origin: '*'
+}));
 
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true })
