@@ -8,11 +8,12 @@ const AuthMiddleWare = require("../Middleware/Auth");
 
 // SignUp with username password => returns accesstoken and user object
 router.post('/signup', async (req, res) => {
-	const hashedPassword = await bcrypt.hash(req.body.password, 10);
+	const salt = await bcrypt.genSalt(10);
+	const hashedPassword = await bcrypt.hash(req.body.password, salt);
 	const user = await new User({ ...req.body, password: hashedPassword })
 	try {
 		const newUser = await user.save();
-		const accessToken = jwt.sign({ id: newUser._id, username: newUser.username, email: newUser.email }, process.env.JWT_SECRET)
+		const accessToken = jwt.sign({ id: newUser._id, username: newUser.username, email: newUser.email }, "test_jwt")
 		res.send({ accessToken, user: newUser })
 	} catch (err) {
 		res.status(400).json({ message: err.message })
@@ -27,7 +28,7 @@ router.post('/signin', async (req, res) => {
 	} else {
 		try {
 			if (await bcrypt.compare(req.body.password, user.password)) {
-				const accessToken = jwt.sign({ id: user._id, username: user.username, email: user.email }, process.env.JWT_SECRET)
+				const accessToken = jwt.sign({ id: user._id, username: user.username, email: user.email }, "test_jwt")
 				res.send({ accessToken })
 			} else {
 				res.send("Not authorized!")
